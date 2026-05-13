@@ -192,52 +192,43 @@ public class SubjectDao extends Dao{
 		
     }
     
-    public boolean delete(Subject subject) throws Exception{
-    	//データベースへのコネクションを確立
-		Connection connection = getConnection();
-		//プリペアードステートメント
-		PreparedStatement statement = null;
-		
-		//実行件数
-		int count = 0;
-		
-		try {
-	        // 存在チェック（これはOK）
-	        Subject old = get(subject.getCd(), subject.getSchool());
-	        if (old == null) {
-	            return false;
-	        }
-	        
-        statement = connection.prepareStatement(
-            "delete from subject where cd=? and school_cd=?"
-            );
-        statement.setString(1, subject.getCd());
-        statement.setString(2, subject.getSchool().getCd());
-        
-        // プリペアードステートメントを実行
-		count = statement.executeUpdate();
-		
-		}catch (Exception e) {
-	        throw e;
-	    } finally {
-	        if (statement != null) {
-	            try {
-	                statement.close();
-	            } catch (SQLException sqle) {
-	                throw sqle;
-	            }
-	        }
-	        if (connection != null) {
-	            try {
-	                connection.close();
-	            } catch (SQLException sqle) {
-	                throw sqle;
-	            }
-	        }
-	    }
+    public boolean delete(Subject subject) throws Exception {
 
-	    return count > 0;
-	}
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+
+            statement = connection.prepareStatement(
+                "delete from subject where cd=? and school_cd=?"
+            );
+
+            statement.setString(1, subject.getCd());
+            statement.setString(2, subject.getSchool().getCd());
+
+            int count = statement.executeUpdate();
+
+            return count > 0;
+
+        } finally {
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+        }
+    }
 
 
 }
