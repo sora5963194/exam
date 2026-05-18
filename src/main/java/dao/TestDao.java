@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 
 import bean.School;
 import bean.Student;
-import bean.Subject; // javax.security.auth.Subjectから変更
+import bean.Subject;
 import bean.Test;
 
 public class TestDao extends Dao {
