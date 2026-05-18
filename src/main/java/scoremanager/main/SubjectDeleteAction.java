@@ -8,10 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
-public class SubjectUpdateAction extends Action{
+public class SubjectDeleteAction extends Action{
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-
 		// ローカル変数の指定 1
 		HttpSession session = req.getSession();// セッション
 		Teacher teacher = (Teacher)session.getAttribute("user");
@@ -31,15 +30,15 @@ public class SubjectUpdateAction extends Action{
 		// sbuject_beanから科目名の取得
 		subject_name = subject.getName();
 		
-		
 		// レスポンス値をセット 6
 		// リクエストに科目コードをセット
-		req.setAttribute("cd", subject_cd);
+		req.setAttribute("subject_cd", subject_cd);
 		// リクエストに科目名をセット
-		req.setAttribute("name", subject_name);
+		req.setAttribute("subject_name", subject_name);
+		
 		
 		// JSPへフォワード 7
-		req.getRequestDispatcher("subject_update.jsp").forward(req,res);
+		req.getRequestDispatcher("subject_delete.jsp").forward(req,res);
 
 }
 }

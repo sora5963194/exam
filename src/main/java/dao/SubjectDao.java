@@ -194,24 +194,34 @@ public class SubjectDao extends Dao{
     
     public boolean delete(Subject subject) throws Exception {
 
-        Connection connection = getConnection();
-        PreparedStatement statement = null;
+    	//データベースへのコネクションを確立
+		Connection connection =getConnection();
+		//プリペアードステートメント
+		PreparedStatement statement = null;
+		//実行件数
+		int count = 0;
 
         try {
-
+        	//プリペアードステートメントにSQL文をセット
             statement = connection.prepareStatement(
                 "delete from subject where cd=? and school_cd=?"
             );
 
+            // プリペアードステートメントに科目コードをバインド
             statement.setString(1, subject.getCd());
+            // プリペアードステートメントに学校コードをバインド
             statement.setString(2, subject.getSchool().getCd());
 
-            int count = statement.executeUpdate();
+            // プリペアードステートメントを実行
+            count = statement.executeUpdate();
 
+            // 実行件数が1件以上の場合trueを返す
             return count > 0;
 
-        } finally {
-
+         }catch (Exception e) {
+			throw e; 
+         }finally {
+        	// プリペアードステートメントを閉じる
             if (statement != null) {
                 try {
                     statement.close();
@@ -219,7 +229,7 @@ public class SubjectDao extends Dao{
                     throw e;
                 }
             }
-
+            // コネクションを閉じる
             if (connection != null) {
                 try {
                     connection.close();
