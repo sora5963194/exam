@@ -1,6 +1,8 @@
 package scoremanager.main;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import bean.Student;
@@ -40,8 +42,14 @@ public class TestListAction extends Action{
 		//DBからデータ取得3
 		//ログインユーザーの学校コードをもとにクラスの一覧を取得
 		List<String> class_list = classNumDao.filter(teacher.getSchool());
+		// クラス番号を昇順ソート
+		Collections.sort(class_list);
+		
 		//ログインユーザーの学校コードをもとに科目の一覧を取得
 		List<Subject> subject_list =subjectDao.filter(teacher.getSchool().getCd());
+		// subject.cd の昇順でソート
+		subject_list.sort(Comparator.comparing(Subject::getCd));
+		
 		
 		// 学生一覧取得
 		List<Student> studentList = studentlistDao.filter();
@@ -59,6 +67,8 @@ public class TestListAction extends Action{
 		        entYearList.add(year);
 		    }
 		}
+		// 入学年度を昇順ソート
+		Collections.sort(entYearList);
 		
 		//ビジネスロジック4
 		if(entYearStr != null) {
