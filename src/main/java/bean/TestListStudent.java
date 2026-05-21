@@ -1,6 +1,8 @@
 package bean;
 
-public class TestListStudent {
+import java.io.Serializable;
+
+public class TestListStudent extends User implements Serializable{
 	/**
 	 * 科目名
 	 */
