@@ -34,24 +34,33 @@ public class TestListStudentExecuteAction extends Action{
 		
 		//学生情報を取得
 		student = studentDao.get(studentNo);
-
-		// 成績一覧取得
-		List<TestListStudent> testList = dao.filter(student);
 		
 		//ビジネスロジック4
-		if (testList == null || testList.size() == 0) { // 成績情報がない場合
+		if (student == null) {
+
 		    errors.put("1", "学生が存在しません");
 		    req.setAttribute("errors", errors);
-		    
+
 		} else {
-
-            // JSPへ成績リストを渡す
-			// 学生情報
-            req.setAttribute("student", student);
-
-            // 成績一覧
-            req.setAttribute("tlslist", testList);
-        }
+			// 成績一覧取得
+		    List<TestListStudent> testList = dao.filter(student);
+		
+			if (testList == null || testList.size() == 0) { // 成績情報がない場合
+			    errors.put("2", "成績情報が存在しません");
+			    req.setAttribute("errors", errors);
+			    
+			} else {
+	
+	            // JSPへ成績リストを渡す
+				// 学生情報
+	            req.setAttribute("student", student);
+	            // 学生番号
+	            req.setAttribute("f4", studentNo);
+	
+	            // 成績一覧
+	            req.setAttribute("tlslist", testList);
+	        }
+			}
 
         // JSPへフォワード
         req.getRequestDispatcher("test_list_student.jsp").forward(req, res);
