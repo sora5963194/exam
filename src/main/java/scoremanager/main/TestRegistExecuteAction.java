@@ -95,8 +95,4 @@ public class TestRegistExecuteAction extends Action {
 }
 
 
-
-//入学年度とクラスを取得できていない問題を解決。
 //山本さんが作ってくれた成績参照を参考にする。
-
-

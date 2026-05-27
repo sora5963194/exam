@@ -87,8 +87,8 @@ public class TestRegistAction extends Action {
         req.setAttribute("f4", countStr);
         
         // プルダウンの選択肢リストをセット
-        req.setAttribute("entYearSet", entYearList); // 入学年度
-        req.setAttribute("cNumlist", class_list);     // クラス番号
+        req.setAttribute("entYearList", entYearList); // 入学年度
+        req.setAttribute("cNumList", class_list);     // クラス番号
         req.setAttribute("list", subject_list);       // 科目
         req.setAttribute("countList", countList);     // 回数（★追加）
         
