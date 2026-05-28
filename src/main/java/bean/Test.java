@@ -7,17 +7,17 @@ import java.io.Serializable;
 public class Test implements Serializable{
 	
 	/**
-	 * 学生番号
+	 * 学生
 	 */
 	private Student student ;
 
 	/**
-	 * 科目コード
+	 * 科目
 	 */
 	private Subject subject ;
 	
 	/**
-	 * 学校コード
+	 * 学校
 	 */
 	private School school ;
 	

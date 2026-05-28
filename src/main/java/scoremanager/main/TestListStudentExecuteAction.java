@@ -75,6 +75,7 @@ public class TestListStudentExecuteAction extends Action {
         StudentDao studentDao = new StudentDao();
         Student student = studentDao.get(studentNo);
 
+
         if (student == null) {
             // 学生が存在しない場合
             // JSPの ${student.name} がnull参照しないようにダミーをセット
@@ -83,10 +84,10 @@ public class TestListStudentExecuteAction extends Action {
             // 学生が見つかった場合は必ずセット（成績なしの場合でも氏名表示に使う）
             req.setAttribute("student", student);
             req.setAttribute("f4", studentNo);
-
             // 成績一覧取得
             TestListStudentDao dao = new TestListStudentDao();
             List<TestListStudent> testList = dao.filter(student);
+
 
             if (testList == null || testList.size() == 0) {
                 // 成績情報がない場合
