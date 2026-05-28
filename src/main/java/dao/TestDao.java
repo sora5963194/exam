@@ -129,10 +129,14 @@ public class TestDao extends Dao {
 
         try {
             // TESTテーブルにある学生番号を使い、STUDENTテーブルから入学年度を重複なし(DISTINCT)で取得するわ
-            String sql = "SELECT DISTINCT s.ENT_YEAR FROM TEST t "
-                       + "INNER JOIN STUDENT s ON t.STUDENT_NO = s.NO "
-                       + "WHERE t.SCHOOL_CD = ? "
-                       + "ORDER BY s.ENT_YEAR ASC";
+//            String sql = "SELECT DISTINCT s.ENT_YEAR FROM TEST t "
+//                       + "INNER JOIN STUDENT s ON t.STUDENT_NO = s.NO "
+//                       + "WHERE t.SCHOOL_CD = ? "
+//                       + "ORDER BY s.ENT_YEAR ASC";
+        	String sql = "SELECT DISTINCT s.ENT_YEAR FROM TEST t "
+                    + "INNER JOIN STUDENT s ON TRIM(t.STUDENT_NO) = TRIM(s.NO) "
+                    + "WHERE t.SCHOOL_CD = ? "
+                    + "ORDER BY s.ENT_YEAR ASC";
             
             statement = connection.prepareStatement(sql);
             statement.setString(1, school.getCd());
@@ -160,11 +164,16 @@ public class TestDao extends Dao {
 
         try {
             // 条件に合う成績データを、学生の情報(名前など)も含めて取得するわ
-            String sql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, t.POINT, t.CLASS_NUM "
-                       + "FROM TEST t "
-                       + "INNER JOIN STUDENT s ON t.STUDENT_NO = s.NO "
-                       + "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? AND t.NO = ? AND t.SCHOOL_CD = ? "
-                       + "ORDER BY t.STUDENT_NO ASC";
+//            String sql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, t.POINT, t.CLASS_NUM "
+//                       + "FROM TEST t "
+//                       + "INNER JOIN STUDENT s ON t.STUDENT_NO = s.NO "
+//                       + "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? AND t.NO = ? AND t.SCHOOL_CD = ? "
+//                       + "ORDER BY t.STUDENT_NO ASC";
+        	String sql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, t.POINT, t.CLASS_NUM "
+                    + "FROM TEST t "
+                    + "INNER JOIN STUDENT s ON TRIM(t.STUDENT_NO) = TRIM(s.NO) "
+                    + "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? AND t.NO = ? AND t.SCHOOL_CD = ? "
+                    + "ORDER BY t.STUDENT_NO ASC";
 
             statement = connection.prepareStatement(sql);
             statement.setInt(1, entYear);
