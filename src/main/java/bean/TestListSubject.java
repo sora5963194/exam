@@ -56,4 +56,22 @@ public class TestListSubject {
     public void setPoint2(String point2) {
         this.point2 = point2;
     }
+
+    /**
+     * 未登録の場合:
+     *   1回目 → "-" を返す（JSPがそのまま表示するので「-」と出る）
+     *   2回目 → -1  を返す（JSPが != -1 で判定して「-」と出す）
+     */
+    public Object getPoint(int no) {
+        String val = (no == 1) ? point1 : point2;
+        if (val == null || val.equals("-")) {
+            // 1回目は文字列「-」、2回目は数値-1を返す
+            return (no == 1) ? "-" : -1;
+        }
+        try {
+            return Integer.parseInt(val);
+        } catch (NumberFormatException e) {
+            return (no == 1) ? "-" : -1;
+        }
+    }
 }

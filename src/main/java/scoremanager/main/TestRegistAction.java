@@ -144,8 +144,8 @@ public class TestRegistAction extends Action {
             req.setAttribute(
                     "testlist",
                     testlist);
+            
         }
-
         req.getRequestDispatcher(
                 "test_regist.jsp")
         .forward(
