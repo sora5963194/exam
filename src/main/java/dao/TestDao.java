@@ -3,6 +3,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import bean.School;
 import bean.Student;
@@ -115,5 +117,86 @@ public class TestDao extends Dao {
 
         // 保存できた件数が0より大きければ成功（true）を返すわ
         return count > 0;
+    }
+    
+    /**
+     * getEntYearListメソッド: 成績が登録されている学生の入学年度を重複なしで取得する
+     */
+    public List<Integer> getEntYearList(School school) throws Exception {
+        List<Integer> list = new ArrayList<>();
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            // TESTテーブルにある学生番号を使い、STUDENTテーブルから入学年度を重複なし(DISTINCT)で取得するわ
+            String sql = "SELECT DISTINCT s.ENT_YEAR FROM TEST t "
+                       + "INNER JOIN STUDENT s ON t.STUDENT_NO = s.NO "
+                       + "WHERE t.SCHOOL_CD = ? "
+                       + "ORDER BY s.ENT_YEAR ASC";
+            
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, school.getCd());
+            
+            ResultSet rSet = statement.executeQuery();
+            while (rSet.next()) {
+                list.add(rSet.getInt("ENT_YEAR"));
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
+        return list;
+    }
+
+    /**
+     * filterメソッド: 入学年度、クラス、科目、回数を指定して成績の一覧を取得する
+     */
+    public List<Test> filter(int entYear, String classNum, Subject subject, int num, School school) throws Exception {
+        List<Test> list = new ArrayList<>();
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            // 条件に合う成績データを、学生の情報(名前など)も含めて取得するわ
+            String sql = "SELECT t.STUDENT_NO, s.NAME AS STUDENT_NAME, t.POINT, t.CLASS_NUM "
+                       + "FROM TEST t "
+                       + "INNER JOIN STUDENT s ON t.STUDENT_NO = s.NO "
+                       + "WHERE s.ENT_YEAR = ? AND t.CLASS_NUM = ? AND t.SUBJECT_CD = ? AND t.NO = ? AND t.SCHOOL_CD = ? "
+                       + "ORDER BY t.STUDENT_NO ASC";
+
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, entYear);
+            statement.setString(2, classNum);
+            statement.setString(3, subject.getCd());
+            statement.setInt(4, num);
+            statement.setString(5, school.getCd());
+
+            ResultSet rSet = statement.executeQuery();
+            while (rSet.next()) {
+                Test test = new Test();
+                
+                // 学生情報を組み立ててセット
+                Student student = new Student();
+                student.setNo(rSet.getString("STUDENT_NO"));
+                student.setName(rSet.getString("STUDENT_NAME"));
+                
+                test.setStudent(student);
+                test.setSubject(subject);
+                test.setSchool(school);
+                test.setNo(num);
+                test.setPoint(rSet.getInt("POINT"));
+                test.setClassNum(rSet.getString("CLASS_NUM"));
+
+                list.add(test);
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        }
+        return list;
     }
 }
