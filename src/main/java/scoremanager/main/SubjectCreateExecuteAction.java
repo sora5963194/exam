@@ -26,17 +26,23 @@ public class SubjectCreateExecuteAction extends Action{
 		subject_cd = req.getParameter("cd");
 		subject_name = req.getParameter("name");
 		
-		if (subjectDao.get(subject_cd , teacher.getSchool()) != null) { // 学生番号が重複している場合
-			errors.put("1", "科目コードが重複しています");
-			// リクエストにエラーメッセージをセット
-			req.setAttribute("errors", errors);
-		} else {
-			// subjectに科目情報をセット
-			subject.setCd(subject_cd);
-			subject.setName(subject_name);
-			subject.setSchool(teacher.getSchool());
-			// saveメソッドで情報を登録
-			subjectDao.save(subject);
+		// 科目コードが3文字以外
+		if (subject_cd == null || subject_cd.length() != 3) {
+		    errors.put("1", "科目コードは3文字で入力してください");
+		    req.setAttribute("errors", errors);
+		} else{
+			if (subjectDao.get(subject_cd , teacher.getSchool()) != null) { // 学生番号が重複している場合
+				errors.put("2", "科目コードが重複しています");
+				// リクエストにエラーメッセージをセット
+				req.setAttribute("errors", errors);
+			} else {
+				// subjectに科目情報をセット
+				subject.setCd(subject_cd);
+				subject.setName(subject_name);
+				subject.setSchool(teacher.getSchool());
+				// saveメソッドで情報を登録
+				subjectDao.save(subject);
+			}
 		}
 		
 		// レスポンス値をセット 6

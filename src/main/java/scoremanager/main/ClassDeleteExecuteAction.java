@@ -1,37 +1,33 @@
 package scoremanager.main;
 
-import bean.Subject;
+import bean.ClassNum;
 import bean.Teacher;
-import dao.SubjectDao;
+import dao.ClassNumDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
-public class SubjectDeleteExecuteAction extends Action{
+public class ClassDeleteExecuteAction extends Action{
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
 		// ローカル変数の指定 1
 		HttpSession session = req.getSession(); // セッション
 		Teacher teacher = (Teacher)session.getAttribute("user");
-		String subject_cd = ""; // 入力された科目コード
-		String subject_name = ""; // 入力された科目名
-		Subject subject = new Subject();
-		SubjectDao subjectDao = new SubjectDao(); // 科目Dao
+		String class_name = ""; // 入力されたクラス名
+		ClassNum classnum = new ClassNum();
+		ClassNumDao classnumDao = new ClassNumDao(); // クラスDao
 		
 		// リクエストパラメーターの取得 2
-		subject_cd = req.getParameter("subject_cd");
-		subject_name = req.getParameter("subject_name");
-		
+		class_name = req.getParameter("class_name");
 		// subjectに科目情報をセット
-		subject.setCd(subject_cd);
-		subject.setName(subject_name);
-		subject.setSchool(teacher.getSchool());
+		classnum.setClass_num(class_name);
+		classnum.setSchool(teacher.getSchool());
 		// deleteメソッドで情報を削除
-		subjectDao.delete(subject);
+		classnumDao.delete(classnum);
 		
 		// JSPへフォワード 7
-		req.getRequestDispatcher("subject_delete_done.jsp").forward(req,res);
+		req.getRequestDispatcher("class_delete_done.jsp").forward(req,res);
 
 }
 }

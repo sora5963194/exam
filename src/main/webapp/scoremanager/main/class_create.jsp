@@ -23,6 +23,11 @@
 					<label for="name">クラス名</label><br>
 					<input class="form-control" type="text" id="name" name="name" value="${name }"
 					required maxlength="5" placeholder="クラス名を入力してください" />
+					<c:if test="${errors.get('1') != null}">
+						<div class="mt-2 text-warning">
+							${errors.get("1")}
+						</div>
+					</c:if>
 				</div>
 
 				<div class="mx-auto py-2">

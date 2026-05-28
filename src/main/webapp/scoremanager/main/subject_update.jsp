@@ -17,6 +17,9 @@
 					<label class="mx-auto py-2" for="code">科目コード</label><br>
 					<input class="border border-0 ps-3" type="text" id="cd" name="cd" value="${cd }" readonly />
 				</div>
+				<!-- 変更前の科目名を保持 -->
+				<input type="hidden" name="old_name" value="${name}" />
+				
 				<div class="mt-2 text-warning">${errors.get("1") }</div>
 
 				<div class="mx-auto py-2">

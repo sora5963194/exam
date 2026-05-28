@@ -199,5 +199,53 @@ public class ClassNumDao extends Dao{
 		return count > 0;
 		
 	}
+	
+	public boolean delete(ClassNum classNum) throws Exception {
+
+    	//データベースへのコネクションを確立
+		Connection connection =getConnection();
+		//プリペアードステートメント
+		PreparedStatement statement = null;
+		//実行件数
+		int count = 0;
+
+        try {
+        	//プリペアードステートメントにSQL文をセット
+            statement = connection.prepareStatement(
+                "delete from class_num where school_cd=? and class_num=?"
+            );
+
+            // プリペアードステートメントに学校コードをバインド
+            statement.setString(1, classNum.getSchool().getCd());
+            // プリペアードステートメントにクラス名をバインド
+            statement.setString(2, classNum.getClass_num());
+
+            // プリペアードステートメントを実行
+            count = statement.executeUpdate();
+
+         }catch (Exception e) {
+			throw e; 
+         }finally {
+        	// プリペアードステートメントを閉じる
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+            // コネクションを閉じる
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+        }
+        // 実行件数が1件以上の場合trueを返す
+        return count > 0;
+    }
+
 
 }
