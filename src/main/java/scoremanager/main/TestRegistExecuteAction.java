@@ -1,12 +1,9 @@
 package scoremanager.main;
 
-import bean.School;
 import bean.Student;
 import bean.Subject;
 import bean.Teacher;
 import bean.Test;
-import dao.StudentDao;
-import dao.SubjectDao;
 import dao.TestDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,102 +13,54 @@ import tool.Action;
 public class TestRegistExecuteAction extends Action {
 
     @Override
-    public void execute(
-            HttpServletRequest req,
-            HttpServletResponse res)
-            throws Exception {
+    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
+        
+        HttpSession session = req.getSession();
+        Teacher teacher = (Teacher) session.getAttribute("user");
+        TestDao testDao = new TestDao();
 
-        HttpSession session =
-                req.getSession();
+        // JSPの隠しパラメータから科目コードと回数を回収
+        String subjectCd = req.getParameter("subject");
+        String countStr = req.getParameter("count");
+        String classNum = (String) session.getAttribute("selectedClassNum");
+        
+        // JSPの <input type="hidden" name="regist"> から学生番号の配列を回収
+        String[] studentNoArray = req.getParameterValues("regist");
 
-        Teacher teacher =
-                (Teacher)session.getAttribute("user");
+        if (studentNoArray != null && subjectCd != null && countStr != null) {
+            int count = Integer.parseInt(countStr);
+            
+            Subject subject = new Subject();
+            subject.setCd(subjectCd);
 
-        School school =
-                teacher.getSchool();
+            // 学生一人ひとりの点数をループで回収して保存
+            for (String studentNo : studentNoArray) {
+                // JSPの name="point_${test.student.no}" から点数を取得
+                String pointStr = req.getParameter("point_" + studentNo);
+                
+                if (pointStr != null && !pointStr.equals("")) {
+                    int point = Integer.parseInt(pointStr);
 
-        String subjectCd =
-                req.getParameter("subject");
+                    Test test = new Test();
+                    
+                    Student student = new Student();
+                    student.setNo(studentNo);
+                    test.setStudent(student);
+                    
+                    test.setSubject(subject);
+                    test.setSchool(teacher.getSchool());
+                    test.setNo(count);
+                    test.setPoint(point);
+                    // クラス番号は、今回は学生の主キー等から特定可能か、あるいはJSP側で送られていないため
+                    // 必要であれば空文字、または学生データ等から補完する（ひとまず空文字か適当な値を設定）
+                    test.setClassNum(classNum != null ? classNum : "");
 
-        int count =
-                Integer.parseInt(
-                        req.getParameter("count"));
-
-        SubjectDao subjectDao =
-                new SubjectDao();
-
-        Subject subject =
-                subjectDao.get(
-                        subjectCd,
-                        school);
-
-        TestDao testDao =
-                new TestDao();
-
-        String[] students =
-                req.getParameterValues(
-                        "regist");
-
-        StudentDao studentDao =
-                new StudentDao();
-
-        for(String no : students){
-
-            Student student =
-                    studentDao.get(no);
-
-            String pointStr =
-                    req.getParameter(
-                    "point_" + no);
-
-            if(pointStr == null ||
-               pointStr.equals("")){
-
-                continue;
+                    // UPSERTを実行
+                    testDao.save(test);
+                }
             }
-
-            int point =
-                    Integer.parseInt(
-                            pointStr);
-
-            Test test =
-                    testDao.get(
-                            student,
-                            subject,
-                            school,
-                            count);
-
-            if(test == null){
-
-                test = new Test();
-
-                test.setStudent(
-                        student);
-
-                test.setSubject(
-                        subject);
-
-                test.setSchool(
-                        school);
-
-                test.setNo(
-                        count);
-
-                test.setClassNum(
-                        student.getClassNum());
-            }
-
-            test.setPoint(
-                    point);
-
-            testDao.save(
-                    test);
         }
 
-        req.getRequestDispatcher(
-                "test_regist_done.jsp")
-        .forward(
-                req,
-                res);
+        req.getRequestDispatcher("test_regist_done.jsp").forward(req, res);
     }
 }
