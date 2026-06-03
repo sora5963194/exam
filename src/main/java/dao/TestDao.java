@@ -13,9 +13,7 @@ import bean.Test;
  
 public class TestDao extends Dao {
  
-    /**
-     * getメソッド: 学生、科目、学校、回数を指定して成績情報を1件取得する
-     */
+//	getメソッド: 学生、科目、学校、回数を指定して成績情報を1件取得する
     public Test get(Student student, Subject subject, School school, int no) throws Exception {
         Test test = null;
         Connection connection = getConnection();
@@ -50,9 +48,8 @@ public class TestDao extends Dao {
         return test;
     }
  
-    /**
-     * saveメソッド: 成績情報をデータベースに保存（新規追加 または 上書き更新）する
-     */
+
+//    saveメソッド: 成績情報をデータベースに保存（新規追加 または 上書き更新）する
     public boolean save(Test test) throws Exception {
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -94,9 +91,9 @@ public class TestDao extends Dao {
         return count > 0;
     }
 
-    /**
-     * filterメソッド: 指定された条件の「生徒全員」と、もしあれば「成績データ」を紐付けて取得する
-     */
+
+//     filterメソッド: 指定された条件の「生徒全員」と、もしあれば「成績データ」を紐付けて取得する
+
     public List<Test> filter(int entYear, String classNum, Subject subject, int num, School school) throws Exception {
         List<Test> list = new ArrayList<>();
         Connection connection = getConnection();
@@ -111,7 +108,7 @@ public class TestDao extends Dao {
         	           + "  AND t.NO = ? "
         	           + "  AND TRIM(t.SCHOOL_CD) = ? "        
         	           + "WHERE s.ENT_YEAR = ? "
-        	           + "  AND TRIM(s.CLASS_NUM) = ? "         // 🌟 ここに TRIM を追加して空白を消し去ったわ！
+        	           + "  AND TRIM(s.CLASS_NUM) = ? "         
         	           + "  AND TRIM(s.SCHOOL_CD) = ? "         
         	           + "ORDER BY s.NO ASC";
 
@@ -148,7 +145,7 @@ public class TestDao extends Dao {
                 if (testNo != 0) {
                     test.setPoint(rSet.getInt("POINT"));
                 } else {
-                    // データがない場合は「-1」をセットして、JSP側で「未入力（空欄）」として扱えるようにするのも手よ
+                    // データがない場合は「-1」をセットして、JSP側で「未入力（空欄）」として扱えるようにする
                     test.setPoint(-1); 
                 }
 
@@ -164,9 +161,6 @@ public class TestDao extends Dao {
         return list;
     }
 
-    /**
-     * 🌟 追加したわよ：Actionクラスの赤波線を消し去るための入学年度リスト取得メソッド
-     */
     public List<Integer> getEntYearList(School school) throws Exception {
         List<Integer> list = new ArrayList<>();
         Connection connection = getConnection();
